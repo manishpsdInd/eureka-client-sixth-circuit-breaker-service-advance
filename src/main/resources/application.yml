@@ -1,0 +1,63 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: eureka-client-sixth-circuit-breaker-service-advance
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true  
+  security:
+    user:
+      name: admin 
+      password: admin
+
+info.timestamp: "@app.timestamp@"
+info.app.name: ${spring.application.name}
+info.app.version.java: "@java.version@"
+info.app.version.SpringCloud: "@spring.cloud.version@"
+info.app.version.SpringCamel: "@camel.version@"
+info.java-vendor: "@java.specification.vendor@"
+
+management:
+  server:
+    port: 8091
+  endpoints:
+    health:
+      show-details: always
+    web:
+      exposure:
+        include: hystrix.stream
+
+logging:
+  config: classpath:logback.xml
+
+eureka:
+  server:
+    port: 9090
+    host: localhost
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.server.host}:${eureka.server.port}/eureka/
+    eureka-server-port: 9090
+  instance:
+    hostname: localhost
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 1    
+
+hystrix.command.default.circuitBreaker.errorThresholdPercentage: 60
+hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds: 9000
+
+hystrix.command.callSCIntIIIKey.circuitBreaker.requestVolumeThreshold: 5
+hystrix.command.callSCIntIIIKey.execution.isolation.thread.timeoutInMilliseconds: 5000
+
+hystrix.command.callSCIntIKey.circuitBreaker.requestVolumeThreshold: 10
+hystrix.command.callSCIntIKey.execution.isolation.thread.timeoutInMilliseconds: 10000
+
+hystrix.command.callSCIntIIKey.circuitBreaker.requestVolumeThreshold: 7
+hystrix.command.callSCIntIIKey.execution.isolation.thread.timeoutInMilliseconds: 7000
+
+hystrix.command.callNonEurekaSCIntIVKey.circuitBreaker.requestVolumeThreshold: 12
+hystrix.command.callNonEurekaSCIntIVKey.execution.isolation.thread.timeoutInMilliseconds: 6000
+
